@@ -16,11 +16,23 @@
 
   <% else %>
 
-    <ul>
-      <% @movies.each do |movie| %>
-        <li><a href="/movies/<%= movie[:id] %>"><%= movie[:title] %></a></li>
-      <% end %>
-    </ul>
+    <table>
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Role</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @movies.each do |movie| %>
+          <tr>
+            <td><a href="/movies/<%= movie[:id] %>"><%= movie[:title] %></a></td>
+            <td><%= movie[:role] %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
 
   <% end %>
 <% end %>

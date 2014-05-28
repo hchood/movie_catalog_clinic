@@ -33,7 +33,7 @@ end
 
 def get_actor_info(actor_id)
   query = %Q{
-    SELECT actors.name AS actor, movies.title AS movie_title, movies.id AS movie_id
+    SELECT actors.name AS actor, movies.title AS movie_title, movies.id AS movie_id, cast_members.character AS role
     FROM actors
     JOIN cast_members ON actors.id = cast_members.actor_id
     JOIN movies ON movies.id = cast_members.movie_id
@@ -51,7 +51,7 @@ def movies_appeared_in(actor_results)
   movies = []
 
   actor_results.each do |result|
-    movies << { title: result['movie_title'], id: result['movie_id'] }
+    movies << { title: result['movie_title'], id: result['movie_id'], role: result['role'] }
   end
 
   movies
