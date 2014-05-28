@@ -1,1 +1,11 @@
+<h3><%= @actor_name %></h3>
 
+<p>
+  <%= @actor_name %> has starred in the following movies:
+</p>
+
+<ul>
+  <% @movies.each do |movie| %>
+    <li><a href="/movies/<%= movie[:id] %>"><%= movie[:title] %></a></li>
+  <% end %>
+</ul>
