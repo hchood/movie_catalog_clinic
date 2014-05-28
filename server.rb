@@ -36,7 +36,12 @@ def get_all_actors
 end
 
 def get_all_movies
-  query = 'SELECT * FROM movies'
+  query = %Q{
+    SELECT movies.title, movies.year, movies.id, genres.name AS genre, studios.name AS studio
+    FROM movies
+    JOIN genres ON genres.id = movies.genre_id
+    JOIN studios ON studios.id = movies.studio_id
+  }
 
   results = db_connection do |conn|
     conn.exec(query)
