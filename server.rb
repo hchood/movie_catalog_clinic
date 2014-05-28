@@ -150,13 +150,17 @@ get '/movies/:id' do
 
   results = get_movie_info(movie_id)
 
-  @movie = {
-    id: results[0]['id'],
-    title: results[0]['title'],
-    year: results[0]['year'],
-    genre: results[0]['genre'],
-    studio: results[0]['studio']
-  }
+  if !results.empty?
+    @movie = {
+      id: results[0]['id'],
+      title: results[0]['title'],
+      year: results[0]['year'],
+      genre: results[0]['genre'],
+      studio: results[0]['studio']
+    }
+  else
+    @movie = {}
+  end
 
   @cast = cast_for_movie(results)
 

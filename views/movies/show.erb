@@ -1,41 +1,57 @@
 
-<h3><%= @movie[:title] %></h3>
+<% if @movie.empty? %>
 
-<table>
-  <thead>
-    <tr>
-      <th>Title</th>
-      <th>Year</th>
-      <th>Genre</th>
-      <th>Studio</th>
-    </tr>
-  </thead>
+  <p>Sorry, we can't find movie with that ID.</p>
 
-  <tbody>
-    <tr>
-      <td><%= @movie[:title] %></td>
-      <td><%= @movie[:year] %></td>
-      <td><%= @movie[:genre] %></td>
-      <td><%= @movie[:studio] %></td>
-    </tr>
-  </tbody>
-</table>
+<% else %>
 
+  <h3><%= @movie[:title] %></h3>
 
-<table>
-  <thead>
-    <tr>
-      <th>Actor</th>
-      <th>Role</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @cast.each do |cast_member| %>
+  <table>
+    <thead>
       <tr>
-        <td><a href="/actors/<%= cast_member[:actor_id] %>"><%= cast_member[:actor] %></a></td>
-        <td><%= cast_member[:role] %></td>
+        <th>Title</th>
+        <th>Year</th>
+        <th>Genre</th>
+        <th>Studio</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td><%= @movie[:title] %></td>
+        <td><%= @movie[:year] %></td>
+        <td><%= @movie[:genre] %></td>
+        <td><%= @movie[:studio] %></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <% if @cast.empty? %>
+
+    <p>This film has no cast.</p>
+
+  <% else %>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Actor</th>
+          <th>Role</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @cast.each do |cast_member| %>
+          <tr>
+            <td><a href="/actors/<%= cast_member[:actor_id] %>"><%= cast_member[:actor] %></a></td>
+            <td><%= cast_member[:role] %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+  <% end %>
+
+<% end %>
