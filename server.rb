@@ -95,6 +95,20 @@ def movies_appeared_in(actor_results)
   movies
 end
 
+def cast_for_movie(results)
+  cast = []
+
+  results.each do |result|
+    cast << {
+      actor_id: result['actor_id'],
+      actor: result['actor'],
+      role: result['role']
+    }
+  end
+
+  cast
+end
+
 #####################################
 #             ROUTES
 #####################################
@@ -143,15 +157,7 @@ get '/movies/:id' do
     studio: results[0]['studio']
   }
 
-  @cast = []
-
-  results.each do |result|
-    @cast << {
-      actor_id: result['actor_id'],
-      actor: result['actor'],
-      role: result['role']
-    }
-  end
+  @cast = cast_for_movie(results)
 
   erb :'movies/show'
 end
