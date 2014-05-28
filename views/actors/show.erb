@@ -8,10 +8,17 @@
     <%= @actor_name %> has starred in the following movies:
   </p>
 
-  <ul>
-    <% @movies.each do |movie| %>
-      <li><a href="/movies/<%= movie[:id] %>"><%= movie[:title] %></a></li>
-    <% end %>
-  </ul>
+  <% if @movies.empty? %>
 
+    <p>This actor hasn't appeared in any movies.</p>
+
+  <% else %>
+
+    <ul>
+      <% @movies.each do |movie| %>
+        <li><a href="/movies/<%= movie[:id] %>"><%= movie[:title] %></a></li>
+      <% end %>
+    </ul>
+
+  <% end %>
 <% end %>
