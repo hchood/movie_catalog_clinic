@@ -21,18 +21,24 @@ def sort_by_name(actors)
   actors.sort_by { |actor| actor['name'] }
 end
 
-#####################################
-#             ROUTES
-#####################################
-
-get '/actors' do
+def get_all_actors
   query = 'SELECT * FROM actors'
 
   results = db_connection do |conn|
     conn.exec(query)
   end
 
-  @actors = sort_by_name(results.to_a)
+  results.to_a
+end
+
+#####################################
+#             ROUTES
+#####################################
+
+get '/actors' do
+  results = get_all_actors
+
+  @actors = sort_by_name(results)
 
   erb :'actors/index'
 end
