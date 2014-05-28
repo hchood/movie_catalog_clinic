@@ -13,6 +13,10 @@ def db_connection
   end
 end
 
+def sort_by_name(actors)
+  actors.sort_by { |actor| actor['name'] }
+end
+
 get '/actors' do
   query = 'SELECT * FROM actors'
 
@@ -20,7 +24,7 @@ get '/actors' do
     conn.exec(query)
   end
 
-  @actors = results.to_a
+  @actors = sort_by_name(results.to_a)
 
   erb :'actors/index'
 end
