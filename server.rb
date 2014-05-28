@@ -30,6 +30,13 @@ get '/actors' do
 end
 
 get '/actors/:id' do
+  actor_id = params[:id]
+
+  results = db_connection do |conn|
+    conn.exec_params('SELECT * FROM actors WHERE id = $1', [actor_id])
+  end
+
+  @actor = results.to_a[0]
 
   erb :'actors/show'
 end
