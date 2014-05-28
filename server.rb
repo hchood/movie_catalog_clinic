@@ -74,7 +74,11 @@ get '/actors/:id' do
 
   results = get_actor_info(actor_id)
 
-  @actor_name = results[0]['actor']
+  if !results.empty?
+    @actor_name = results[0]['actor']
+  else
+    @actor_name = ''
+  end
 
   @movies = movies_appeared_in(results)
 

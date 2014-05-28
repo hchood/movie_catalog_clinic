@@ -1,11 +1,17 @@
-<h3><%= @actor_name %></h3>
+<% if @actor_name.empty? %>
+  Sorry, we can't find an actor with that ID.
+<% else %>
 
-<p>
-  <%= @actor_name %> has starred in the following movies:
-</p>
+  <h3><%= @actor_name %></h3>
 
-<ul>
-  <% @movies.each do |movie| %>
-    <li><a href="/movies/<%= movie[:id] %>"><%= movie[:title] %></a></li>
-  <% end %>
-</ul>
+  <p>
+    <%= @actor_name %> has starred in the following movies:
+  </p>
+
+  <ul>
+    <% @movies.each do |movie| %>
+      <li><a href="/movies/<%= movie[:id] %>"><%= movie[:title] %></a></li>
+    <% end %>
+  </ul>
+
+<% end %>
