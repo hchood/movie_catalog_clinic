@@ -66,6 +66,25 @@ def get_actor_info(actor_id)
   results.to_a
 end
 
+def get_movie_info(movie_id)
+  query = %Q{
+    SELECT movies.title, movies.year, movies.id, genres.name AS genre, studios.name AS studio,
+    actors.id AS actor_id, actors.name AS actor, cast_members.character AS role
+    FROM movies
+    JOIN genres ON genres.id = movies.genre_id
+    JOIN studios ON studios.id = movies.studio_id
+    JOIN cast_members ON cast_members.movie_id = movies.id
+    JOIN actors ON actors.id = cast_members.actor_id
+    WHERE movies.id = $1;
+  }
+
+  results = db_connection do |conn|
+    conn.exec_params(query, [movie_id])
+  end
+
+  results.to_a
+end
+
 def movies_appeared_in(actor_results)
   movies = []
 
@@ -113,6 +132,26 @@ get '/movies' do
 end
 
 get '/movies/:id' do
+  movie_id = params[:id]
+
+  results = get_movie_info(movie_id)
+
+  @movie = {
+    id: results[0]['id'],
+    title: results[0]['title'],
+    year: results[0]['year'],
+    studio: results[0]['studio']
+  }
+
+  @cast = []
+
+  results.each do |result|
+    @cast << {
+      actor_id: result['actor_id'],
+      actor: result['actor'],
+      role: result['role']
+    }
+  end
 
   erb :'movies/show'
 end
