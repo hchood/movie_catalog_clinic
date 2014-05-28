@@ -1,5 +1,6 @@
 require 'sinatra'
 require 'pg'
+require 'pry'
 
 def db_connection
   begin
@@ -13,6 +14,13 @@ def db_connection
 end
 
 get '/actors' do
+  query = 'SELECT * FROM actors'
+
+  results = db_connection do |conn|
+    conn.exec(query)
+  end
+
+  @actors = results.to_a
 
   erb :'actors/index'
 end
