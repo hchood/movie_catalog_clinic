@@ -2,6 +2,10 @@ require 'sinatra'
 require 'pg'
 require 'pry'
 
+#####################################
+#             METHODS
+#####################################
+
 def db_connection
   begin
     connection = PG.connect(dbname: 'movies')
@@ -16,6 +20,10 @@ end
 def sort_by_name(actors)
   actors.sort_by { |actor| actor['name'] }
 end
+
+#####################################
+#             ROUTES
+#####################################
 
 get '/actors' do
   query = 'SELECT * FROM actors'
