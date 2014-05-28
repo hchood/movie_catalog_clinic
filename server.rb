@@ -31,6 +31,32 @@ def get_all_actors
   results.to_a
 end
 
+def get_actor_info(actor_id)
+  query = %Q{
+    SELECT actors.name AS actor, movies.title AS movie_title, movies.id AS movie_id
+    FROM actors
+    JOIN cast_members ON actors.id = cast_members.actor_id
+    JOIN movies ON movies.id = cast_members.movie_id
+    WHERE actors.id = $1;
+  }
+
+  results = db_connection do |conn|
+    conn.exec_params(query, [actor_id])
+  end
+
+  results.to_a
+end
+
+def movies_appeared_in(actor_results)
+  movies = []
+
+  actor_results.each do |result|
+    movies << { title: result['movie_title'], id: result['movie_id'] }
+  end
+
+  movies
+end
+
 #####################################
 #             ROUTES
 #####################################
@@ -46,26 +72,11 @@ end
 get '/actors/:id' do
   actor_id = params[:id]
 
-  query = %Q{
-    SELECT actors.name AS actor, movies.title AS movie_title, movies.id AS movie_id
-    FROM actors
-    JOIN cast_members ON actors.id = cast_members.actor_id
-    JOIN movies ON movies.id = cast_members.movie_id
-    WHERE actors.id = $1;
-  }
-
-  results = db_connection do |conn|
-    results = conn.exec_params(query, [actor_id])
-    results.to_a
-  end
+  results = get_actor_info(actor_id)
 
   @actor_name = results[0]['actor']
 
-  @movies = []
-
-  results.each do |result|
-    @movies << { title: result['movie_title'], id: result['movie_id'] }
-  end
+  @movies = movies_appeared_in(results)
 
   erb :'actors/show'
 end
