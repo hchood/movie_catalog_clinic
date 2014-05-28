@@ -21,8 +21,22 @@ def sort_by_name(actors)
   actors.sort_by { |actor| actor['name'] }
 end
 
+def sort_by_title(movies)
+  movies.sort_by { |movie| movie['title'] }
+end
+
 def get_all_actors
   query = 'SELECT * FROM actors'
+
+  results = db_connection do |conn|
+    conn.exec(query)
+  end
+
+  results.to_a
+end
+
+def get_all_movies
+  query = 'SELECT * FROM movies'
 
   results = db_connection do |conn|
     conn.exec(query)
@@ -86,6 +100,9 @@ get '/actors/:id' do
 end
 
 get '/movies' do
+  results = get_all_movies
+
+  @movies = sort_by_title(results)
 
   erb :'movies/index'
 end
