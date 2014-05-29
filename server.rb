@@ -47,7 +47,21 @@ def get_all_movies
     conn.exec(query)
   end
 
-  results.to_a
+  movies = []
+
+  results.each do |movie|
+    movie = {
+      id: movie['id'].to_i,
+      title: movie['title'],
+      year: movie['year'].to_i,
+      rating: movie['rating'].to_i,
+      genre: movie['genre'],
+      studio: movie['studio']
+    }
+    movies << movie
+  end
+
+  movies
 end
 
 def get_actor_info(actor_id)
