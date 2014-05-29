@@ -37,7 +37,7 @@ end
 
 def get_all_movies
   query = %Q{
-    SELECT movies.title, movies.year, movies.id, genres.name AS genre, studios.name AS studio
+    SELECT movies.title, movies.year, movies.id, movies.rating, genres.name AS genre, studios.name AS studio
     FROM movies
     JOIN genres ON genres.id = movies.genre_id
     JOIN studios ON studios.id = movies.studio_id
@@ -68,7 +68,7 @@ end
 
 def get_movie_info(movie_id)
   query = %Q{
-    SELECT movies.title, movies.year, movies.id, genres.name AS genre, studios.name AS studio,
+    SELECT movies.title, movies.year, movies.id, movies.rating, genres.name AS genre, studios.name AS studio,
     actors.id AS actor_id, actors.name AS actor, cast_members.character AS role
     FROM movies
     JOIN genres ON genres.id = movies.genre_id
@@ -89,7 +89,12 @@ def movies_appeared_in(actor_results)
   movies = []
 
   actor_results.each do |result|
-    movies << { title: result['movie_title'], id: result['movie_id'], role: result['role'] }
+    movies << {
+      title: result['movie_title'],
+      id: result['movie_id'],
+      role: result['role'],
+      rating: result['rating'].to_i
+    }
   end
 
   movies
