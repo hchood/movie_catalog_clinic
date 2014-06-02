@@ -17,13 +17,15 @@ def db_connection
   end
 end
 
-def get_all_movies
+def get_all_movies(params)
+  order = params[:order] || 'title'
+
   query = %Q{
     SELECT movies.title, movies.year, movies.id, movies.rating, genres.name AS genre, studios.name AS studio
     FROM movies
     JOIN genres ON genres.id = movies.genre_id
     JOIN studios ON studios.id = movies.studio_id
-    ORDER BY movies.title
+    ORDER BY movies.#{order}
   }
 
   results = db_connection do |conn|
@@ -56,7 +58,7 @@ end
 #####################################
 
 get '/movies' do
-  @movies = get_all_movies
+  @movies = get_all_movies(params)
 
   erb :'movies/index'
 end
