@@ -1,5 +1,12 @@
 <h3>Movies</h3>
 
+<ul>
+  <li><a href="/movies?page=<%= params[:page].to_i + 1 %>">Next</a></li>
+  <% if params[:page] && params[:page] != '1' %>
+    <li><a href="/movies?page=<%= params[:page].to_i - 1 %>">Back</a></li>
+  <% end %>
+</ul>
+
 <table>
   <thead>
     <tr>
