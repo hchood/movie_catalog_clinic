@@ -1,8 +1,6 @@
 require 'sinatra'
 require 'pg'
 require 'pry'
-require_relative 'movie_helpers'
-require_relative 'actor_helpers'
 
 #####################################
 #             METHODS
@@ -19,11 +17,42 @@ def db_connection
   end
 end
 
+def get_all_movies
+  query = %Q{
+    SELECT movies.title, movies.year, movies.id, movies.rating, genres.name AS genre, studios.name AS studio
+    FROM movies
+    JOIN genres ON genres.id = movies.genre_id
+    JOIN studios ON studios.id = movies.studio_id
+    ORDER BY movies.title
+  }
+
+  results = db_connection do |conn|
+    conn.exec(query)
+  end
+
+  create_movies_array(results)
+end
+
+def create_movies_array(results)
+  movies = []
+
+  results.each do |movie|
+    movie = {
+      id: movie['id'].to_i,
+      title: movie['title'],
+      year: movie['year'].to_i,
+      rating: movie['rating'].to_i,
+      genre: movie['genre'],
+      studio: movie['studio']
+    }
+    movies << movie
+  end
+
+  movies
+end
+
 #####################################
 #             CONTROLLER
-#####################################
-
-# MOVIES ACTIONS
 #####################################
 
 get '/movies' do
@@ -32,46 +61,4 @@ get '/movies' do
   erb :'movies/index'
 end
 
-get '/movies/:id' do
-  results = get_movie_info(params[:id])
-
-  if !results.empty?
-    @movie = {
-      id: results[0]['id'],
-      title: results[0]['title'],
-      year: results[0]['year'],
-      genre: results[0]['genre'],
-      studio: results[0]['studio']
-    }
-  else
-    @movie = {}
-  end
-
-  @cast = cast_for_movie(results)
-
-  erb :'movies/show'
-end
-
-# ACTORS ACTIONS
-#####################################
-
-get '/actors' do
-  @actors = get_all_actors
-
-  erb :'actors/index'
-end
-
-get '/actors/:id' do
-  results = get_actor_info(params[:id])
-
-  if !results.empty?
-    @actor_name = results[0]['actor']
-  else
-    @actor_name = ''
-  end
-
-  @movies = movies_appeared_in(results)
-
-  erb :'actors/show'
-end
 
