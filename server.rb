@@ -26,11 +26,16 @@ def get_all_movies(params)
     offset = 0
   end
 
+  if params[:query]
+    search_term = "WHERE movies.title ILIKE '%#{params[:query]}%' or movies.synopsis ILIKE '%#{params[:query]}%'"
+  end
+
   query = %Q{
     SELECT movies.title, movies.year, movies.id, movies.rating, genres.name AS genre, studios.name AS studio
     FROM movies
     JOIN genres ON genres.id = movies.genre_id
     JOIN studios ON studios.id = movies.studio_id
+    #{search_term}
     ORDER BY movies.#{order}
     OFFSET #{offset}
     LIMIT 20
